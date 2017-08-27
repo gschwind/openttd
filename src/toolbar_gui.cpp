@@ -963,6 +963,18 @@ static CallBackFunction MenuClickBuildAir(int index)
 	return CBF_NONE;
 }
 
+/**
+ * Handle click on the entry in the Track menu.
+ *
+ * @param index Unused.
+ * @return #CBF_NONE
+ */
+static CallBackFunction ToolbarClickShowTrack(Window *w)
+{
+	ShowBuildAirToolbar();
+	return CBF_NONE;
+}
+
 /* --- Forest button menu --- */
 
 static CallBackFunction ToolbarForestClick(Window *w)
@@ -1304,6 +1316,7 @@ static MenuClickedProc * const _menu_clicked_procs[] = {
 	MenuClickMusicWindow, // 26
 	MenuClickNewspaper,   // 27
 	MenuClickHelp,        // 28
+	NULL,                 // 29
 };
 
 /** Full blown container to make it behave exactly as we want :) */
@@ -1764,7 +1777,8 @@ class NWidgetMainToolbarContainer : public NWidgetToolbarContainer {
 			WID_TN_LANDSCAPE,
 			WID_TN_MUSIC_SOUND,
 			WID_TN_MESSAGES,
-			WID_TN_HELP
+			WID_TN_HELP,
+			WID_TN_TRACK
 		};
 
 		/* If at least BIGGEST_ARRANGEMENT fit, just spread all the buttons nicely */
@@ -1930,6 +1944,7 @@ static ToolbarButtonProc * const _toolbar_button_procs[] = {
 	ToolbarMusicClick,
 	ToolbarNewspaperClick,
 	ToolbarHelpClick,
+	ToolbarClickShowTrack,
 	ToolbarSwitchClick,
 };
 
@@ -2212,6 +2227,7 @@ static NWidgetBase *MakeMainToolbar(int *biggest_index)
 		SPR_IMG_MUSIC,           // WID_TN_MUSIC_SOUND
 		SPR_IMG_MESSAGES,        // WID_TN_MESSAGES
 		SPR_IMG_QUERY,           // WID_TN_HELP
+		SPR_SHARED_ORDERS_ICON,  // WID_TN_TRACK
 		SPR_IMG_SWITCH_TOOLBAR,  // WID_TN_SWITCH_BAR
 	};
 

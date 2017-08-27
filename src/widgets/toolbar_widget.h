@@ -45,6 +45,7 @@ enum ToolbarNormalWidgets {
 	WID_TN_MUSIC_SOUND,   ///< Music/sound configuration menu.
 	WID_TN_MESSAGES,      ///< Messages menu.
 	WID_TN_HELP,          ///< Help menu.
+	WID_TN_TRACK,         ///< Menu that list tracks (order lists)
 	WID_TN_SWITCH_BAR,    ///< Only available when toolbar has been split to switch between different subsets.
 	WID_TN_END,           ///< Helper for knowing the amount of widgets.
 };
