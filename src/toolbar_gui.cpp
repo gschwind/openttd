@@ -969,7 +969,7 @@ static CallBackFunction MenuClickBuildAir(int index)
  * @param index Unused.
  * @return #CBF_NONE
  */
-static CallBackFunction ToolbarClickShowTrack(Window *w)
+static CallBackFunction ToolbarOrdersListClick(Window *w)
 {
 	std::fprintf(stderr, "call %s\n", __PRETTY_FUNCTION__);
 
@@ -1958,7 +1958,7 @@ static ToolbarButtonProc * const _toolbar_button_procs[] = {
 	ToolbarMusicClick,
 	ToolbarNewspaperClick,
 	ToolbarHelpClick,
-	ToolbarClickShowTrack,
+	ToolbarOrdersListClick,
 	ToolbarSwitchClick,
 };
 
