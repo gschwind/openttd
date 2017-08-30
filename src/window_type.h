@@ -681,6 +681,12 @@ enum WindowClass {
 	 */
 	WC_SAVE_PRESET,
 
+	/**
+	 * Orders List Window; %Window numbers:
+	 *   - 0 = #OrdersListWidgets
+	 */
+	WC_ORDERS_LIST,
+
 	WC_INVALID = 0xFFFF, ///< Invalid window.
 };
 

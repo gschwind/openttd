@@ -480,6 +480,7 @@ newgrf_gui.cpp
 news_gui.cpp
 object_gui.cpp
 order_gui.cpp
+orders_list_gui.cpp
 osk_gui.cpp
 rail_gui.cpp
 road_gui.cpp
@@ -543,6 +544,7 @@ widgets/newgrf_widget.h
 widgets/news_widget.h
 widgets/object_widget.h
 widgets/order_widget.h
+widgets/orders_list_widget.h
 widgets/osk_widget.h
 widgets/rail_widget.h
 widgets/road_widget.h

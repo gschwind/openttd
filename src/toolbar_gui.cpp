@@ -976,7 +976,7 @@ static CallBackFunction ToolbarClickShowTrack(Window *w)
 	OrderList * ol;
 	FOR_ALL_ORDER_LISTS(ol)
 	{
-		std::fprintf(stderr, "orderlist #%u\n", orderlist_index);
+		std::fprintf(stderr, "orderlist #%lu\n", orderlist_index);
 		std::fprintf(stderr, "NumOrders = %u\n", ol->GetNumOrders());
 		std::fprintf(stderr, "number of vehicle = %u\n", ol->GetNumVehicles());
 		for(Vehicle * i = ol->GetFirstSharedVehicle(); i != NULL; i = i->NextShared())
@@ -985,7 +985,7 @@ static CallBackFunction ToolbarClickShowTrack(Window *w)
 		}
 
 	}
-
+	ShowOrdersListWindow();
 	return CBF_NONE;
 }
 

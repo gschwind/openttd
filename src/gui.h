@@ -67,4 +67,7 @@ void ShowBuildIndustryWindow();
 void ShowFoundTownWindow();
 void ShowMusicWindow();
 
+/* orders_list_gui.cpp */
+void ShowOrdersListWindow();
+
 #endif /* GUI_H */
