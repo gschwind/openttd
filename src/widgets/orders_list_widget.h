@@ -16,6 +16,8 @@
 enum OrdersListWidgets {
 	WID_OL_SCROLLING_TEXT, ///< The actually scrolling text.
 	WID_OL_WEBSITE,        ///< URL of OpenTTD website.
+	WID_OL_LIST,           ///< List of Orders list
+	WID_OL_SCROLLBAR,      ///< Scrollbar Orders list
 };
 
 #endif /* WIDGETS_ORDERS_LIST_WIDGET_H */

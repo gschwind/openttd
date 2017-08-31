@@ -34,15 +34,15 @@ static const NWidgetPart _nested_orders_list_widgets[] = {
 		NWidget(WWT_CLOSEBOX, COLOUR_GREY),
 		NWidget(WWT_CAPTION, COLOUR_GREY), SetDataTip(STR_ABOUT_OPENTTD, STR_TOOLTIP_WINDOW_TITLE_DRAG_THIS),
 	EndContainer(),
-	NWidget(WWT_PANEL, COLOUR_GREY), SetPIP(4, 2, 4),
-		NWidget(WWT_LABEL, COLOUR_GREY), SetDataTip(STR_ABOUT_ORIGINAL_COPYRIGHT, STR_NULL),
-		NWidget(WWT_LABEL, COLOUR_GREY), SetDataTip(STR_ABOUT_VERSION, STR_NULL),
-		NWidget(WWT_FRAME, COLOUR_GREY), SetPadding(0, 5, 1, 5),
-			NWidget(WWT_EMPTY, INVALID_COLOUR, WID_OL_SCROLLING_TEXT),
-		EndContainer(),
-		NWidget(WWT_LABEL, COLOUR_GREY, WID_OL_WEBSITE), SetDataTip(STR_BLACK_RAW_STRING, STR_NULL),
-		NWidget(WWT_LABEL, COLOUR_GREY), SetDataTip(STR_ABOUT_COPYRIGHT_OPENTTD, STR_NULL),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_MATRIX, COLOUR_GREY, WID_OL_LIST), SetMinimalSize(248, 0), SetFill(1, 0), SetResize(1, 1), SetMatrixDataTip(1, 0, STR_NULL), SetScrollbar(WID_OL_SCROLLBAR),
+		NWidget(NWID_VSCROLLBAR, COLOUR_GREY, WID_OL_SCROLLBAR),
 	EndContainer(),
+	NWidget(NWID_HORIZONTAL),
+		NWidget(WWT_PANEL, COLOUR_GREY), SetMinimalSize(0, 12), SetResize(1, 0), SetFill(1, 1), EndContainer(),
+		NWidget(WWT_RESIZEBOX, COLOUR_GREY),
+	EndContainer(),
+
 };
 
 static WindowDesc _orders_list_desc(
@@ -126,7 +126,7 @@ struct OrdersListWindow : public Window {
 		this->InitNested(0);
 
 		this->counter = 5;
-		this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
+//		this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
 	}
 
 	virtual void SetStringParameters(int widget) const
@@ -136,46 +136,47 @@ struct OrdersListWindow : public Window {
 
 	virtual void UpdateWidgetSize(int widget, Dimension *size, const Dimension &padding, Dimension *fill, Dimension *resize)
 	{
-		if (widget != WID_OL_SCROLLING_TEXT) return;
-
-		this->line_height = FONT_HEIGHT_NORMAL;
-
-		Dimension d;
-		d.height = this->line_height * num_visible_lines;
-
-		d.width = 0;
-		for (uint i = 0; i < lengthof(_credits); i++) {
-			d.width = max(d.width, GetStringBoundingBox(_credits[i]).width);
-		}
-		*size = maxdim(*size, d);
+//		if (widget != WID_OL_SCROLLING_TEXT) return;
+//
+//		this->line_height = FONT_HEIGHT_NORMAL;
+//
+//		Dimension d;
+//		d.height = this->line_height * num_visible_lines;
+//
+//		d.width = 0;
+//		for (uint i = 0; i < lengthof(_credits); i++) {
+//			d.width = max(d.width, GetStringBoundingBox(_credits[i]).width);
+//		}
+//		*size = maxdim(*size, d);
 	}
 
 	virtual void DrawWidget(const Rect &r, int widget) const
 	{
-		if (widget != WID_OL_SCROLLING_TEXT) return;
-
-		int y = this->text_position;
-
-		/* Show all scrolling _credits */
-		for (uint i = 0; i < lengthof(_credits); i++) {
-			if (y >= r.top + 7 && y < r.bottom - this->line_height) {
-				DrawString(r.left, r.right, y, _credits[i], TC_BLACK, SA_LEFT | SA_FORCE);
-			}
-			y += this->line_height;
-		}
+		std::fprintf(stderr, "wid = %d, left = %d, top = %d, right = %d, bottom = %d\n", widget, r.left, r.top, r.right, r.bottom);
+//		if (widget != WID_OL_SCROLLING_TEXT) return;
+//
+//		int y = this->text_position;
+//
+//		/* Show all scrolling _credits */
+//		for (uint i = 0; i < lengthof(_credits); i++) {
+//			if (y >= r.top + 7 && y < r.bottom - this->line_height) {
+//				DrawString(r.left, r.right, y, _credits[i], TC_BLACK, SA_LEFT | SA_FORCE);
+//			}
+//			y += this->line_height;
+//		}
 	}
 
 	virtual void OnTick()
 	{
-		if (--this->counter == 0) {
-			this->counter = 5;
-			this->text_position--;
-			/* If the last text has scrolled start a new from the start */
-			if (this->text_position < (int)(this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y - lengthof(_credits) * this->line_height)) {
-				this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
-			}
-			this->SetDirty();
-		}
+//		if (--this->counter == 0) {
+//			this->counter = 5;
+//			this->text_position--;
+//			/* If the last text has scrolled start a new from the start */
+//			if (this->text_position < (int)(this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y - lengthof(_credits) * this->line_height)) {
+//				this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
+//			}
+//			this->SetDirty();
+//		}
 	}
 };
 
