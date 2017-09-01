@@ -138,18 +138,13 @@ uint GetOrdersListHeight(uint divisor)
 }
 
 struct OrdersListWindow : public Window {
-	int text_position;                       ///< The top of the scrolling text
-	byte counter;                            ///< Used to scroll the text every 5 ticks
-	int line_height;                         ///< The height of a single line
-	static const int num_visible_lines = 19; ///< The number of lines visible simultaneously
 	Scrollbar *vscroll;
 	SmallVector<OrderList const *, 32> data;
 
 	OrdersListWindow() : Window(&_orders_list_desc)
 	{
-		this->InitNested(0);
-
-		vscroll = this->GetScrollbar(WID_OL_SCROLLBAR);
+		this->CreateNestedTree();
+		this->vscroll = this->GetScrollbar(WID_OL_SCROLLBAR);
 
 		OrderList * ol;
 		FOR_ALL_ORDER_LISTS(ol)
@@ -165,11 +160,9 @@ struct OrdersListWindow : public Window {
 		}
 
 		vscroll->SetCount(data.Length());
-		vscroll->SetPosition(0);
-		vscroll->SetCapacity(4);
 
-		this->counter = 5;
-//		this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
+		this->FinishInitNested(this->window_number);
+
 	}
 
 	virtual void SetStringParameters(int widget) const
@@ -189,7 +182,7 @@ struct OrdersListWindow : public Window {
 
 	virtual void DrawWidget(const Rect &r, int widget) const
 	{
-		std::fprintf(stderr, "wid = %d, left = %d, top = %d, right = %d, bottom = %d\n", widget, r.left, r.top, r.right, r.bottom);
+		//std::fprintf(stderr, "wid = %d, left = %d, top = %d, right = %d, bottom = %d\n", widget, r.left, r.top, r.right, r.bottom);
 		switch (widget) {
 			case WID_OL_LIST:
 				this->DrawOrdersListItems(this->resize.step_height, r);
@@ -197,18 +190,10 @@ struct OrdersListWindow : public Window {
 		}
 	}
 
-//	virtual void OnTick()
-//	{
-//		if (--this->counter == 0) {
-//			this->counter = 5;
-//			this->text_position--;
-//			/* If the last text has scrolled start a new from the start */
-//			if (this->text_position < (int)(this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y - lengthof(_credits) * this->line_height)) {
-//				this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
-//			}
-//			this->SetDirty();
-//		}
-//	}
+	virtual void OnResize()
+	{
+		this->vscroll->SetCapacityFromWidget(this, WID_OL_LIST);
+	}
 
 	/**
 	 * Draw all the vehicle list items.
