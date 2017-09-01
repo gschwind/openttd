@@ -26,6 +26,8 @@
 #include "core/geometry_func.hpp"
 #include "newgrf_debug.h"
 #include "zoom_func.h"
+#include "order_base.h"
+#include "vehicle_base.h"
 
 #include "widgets/orders_list_widget.h"
 
@@ -115,15 +117,56 @@ static const char * const _credits[] = {
 	"  Chris Sawyer - For an amazing game!"
 };
 
+/**
+ * Get the height of a vehicle in the vehicle list GUIs.
+ * @param type    the vehicle type to look at
+ * @param divisor the resulting height must be dividable by this
+ * @return the height
+ */
+uint GetOrdersListHeight(uint divisor)
+{
+	/* Name + vehicle + profit */
+	uint base = ScaleGUITrad(14) + 2 * FONT_HEIGHT_SMALL;
+//	/* Drawing of the 4 small orders + profit*/
+//	if (type >= VEH_SHIP) base = max(base, 5U * FONT_HEIGHT_SMALL);
+
+	if (divisor == 1) return base;
+
+	/* Make sure the height is dividable by divisor */
+	uint rem = base % divisor;
+	return base + (rem == 0 ? 0 : divisor - rem);
+}
+
 struct OrdersListWindow : public Window {
 	int text_position;                       ///< The top of the scrolling text
 	byte counter;                            ///< Used to scroll the text every 5 ticks
 	int line_height;                         ///< The height of a single line
 	static const int num_visible_lines = 19; ///< The number of lines visible simultaneously
+	Scrollbar *vscroll;
+	SmallVector<OrderList const *, 32> data;
 
 	OrdersListWindow() : Window(&_orders_list_desc)
 	{
 		this->InitNested(0);
+
+		vscroll = this->GetScrollbar(WID_OL_SCROLLBAR);
+
+		OrderList * ol;
+		FOR_ALL_ORDER_LISTS(ol)
+		{
+			std::fprintf(stderr, "orderlist #%lu\n", orderlist_index);
+			std::fprintf(stderr, "NumOrders = %u\n", ol->GetNumOrders());
+			std::fprintf(stderr, "number of vehicle = %u\n", ol->GetNumVehicles());
+			for(Vehicle * i = ol->GetFirstSharedVehicle(); i != NULL; i = i->NextShared())
+			{
+				std::fprintf(stderr, "   Vehicule: %p\n", i);
+			}
+			*(data.Append()) = ol;
+		}
+
+		vscroll->SetCount(data.Length());
+		vscroll->SetPosition(0);
+		vscroll->SetCapacity(4);
 
 		this->counter = 5;
 //		this->text_position = this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->pos_y + this->GetWidget<NWidgetBase>(WID_OL_SCROLLING_TEXT)->current_y;
@@ -136,18 +179,12 @@ struct OrdersListWindow : public Window {
 
 	virtual void UpdateWidgetSize(int widget, Dimension *size, const Dimension &padding, Dimension *fill, Dimension *resize)
 	{
-//		if (widget != WID_OL_SCROLLING_TEXT) return;
-//
-//		this->line_height = FONT_HEIGHT_NORMAL;
-//
-//		Dimension d;
-//		d.height = this->line_height * num_visible_lines;
-//
-//		d.width = 0;
-//		for (uint i = 0; i < lengthof(_credits); i++) {
-//			d.width = max(d.width, GetStringBoundingBox(_credits[i]).width);
-//		}
-//		*size = maxdim(*size, d);
+		switch (widget) {
+			case WID_OL_LIST:
+				resize->height = GetOrdersListHeight(1);
+				size->height = 4 * resize->height;
+				break;
+		}
 	}
 
 	virtual void DrawWidget(const Rect &r, int widget) const
