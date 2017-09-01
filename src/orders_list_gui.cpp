@@ -232,6 +232,12 @@ struct OrdersListWindow : public Window {
 
 			char buf[256];
 			std::snprintf(buf, 256, "Orders list #%d\n", i);
+			DrawString(text_left, text_right, y, buf);
+
+			std::snprintf(buf, 256, "%d Vehicle(s)\n", ol->GetNumVehicles());
+			DrawString(text_left, text_right, y + line_height - 2*FONT_HEIGHT_SMALL - WD_FRAMERECT_BOTTOM - 1, buf);
+
+			std::snprintf(buf, 256, "%d Orders(s)\n", ol->GetNumOrders());
 			DrawString(text_left, text_right, y + line_height - FONT_HEIGHT_SMALL - WD_FRAMERECT_BOTTOM - 1, buf);
 
 			y += line_height;
