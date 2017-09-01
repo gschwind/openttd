@@ -190,21 +190,15 @@ struct OrdersListWindow : public Window {
 	virtual void DrawWidget(const Rect &r, int widget) const
 	{
 		std::fprintf(stderr, "wid = %d, left = %d, top = %d, right = %d, bottom = %d\n", widget, r.left, r.top, r.right, r.bottom);
-//		if (widget != WID_OL_SCROLLING_TEXT) return;
-//
-//		int y = this->text_position;
-//
-//		/* Show all scrolling _credits */
-//		for (uint i = 0; i < lengthof(_credits); i++) {
-//			if (y >= r.top + 7 && y < r.bottom - this->line_height) {
-//				DrawString(r.left, r.right, y, _credits[i], TC_BLACK, SA_LEFT | SA_FORCE);
-//			}
-//			y += this->line_height;
-//		}
+		switch (widget) {
+			case WID_OL_LIST:
+				this->DrawOrdersListItems(this->resize.step_height, r);
+				break;
+		}
 	}
 
-	virtual void OnTick()
-	{
+//	virtual void OnTick()
+//	{
 //		if (--this->counter == 0) {
 //			this->counter = 5;
 //			this->text_position--;
@@ -214,6 +208,49 @@ struct OrdersListWindow : public Window {
 //			}
 //			this->SetDirty();
 //		}
+//	}
+
+	/**
+	 * Draw all the vehicle list items.
+	 * @param selected_vehicle The vehicle that is to be highlighted.
+	 * @param line_height      Height of a single item line.
+	 * @param r                Rectangle with edge positions of the matrix widget.
+	 */
+	void DrawOrdersListItems(int line_height, const Rect &r) const
+	{
+		int left = r.left + WD_MATRIX_LEFT;
+		int right = r.right - WD_MATRIX_RIGHT;
+		int width = right - left;
+		bool rtl = _current_text_dir == TD_RTL;
+
+//		int text_offset = std::max<int>(GetSpriteSize(SPR_PROFIT_LOT).width, GetDigitWidth() * this->unitnumber_digits) + WD_FRAMERECT_RIGHT;
+//		int text_left  = left  + (rtl ?           0 : text_offset);
+//		int text_right = right - (rtl ? text_offset :           0);
+//
+//		bool show_orderlist = this->vli.vtype >= VEH_SHIP;
+//		int orderlist_left  = left  + (rtl ? 0 : max(ScaleGUITrad(100) + text_offset, width / 2));
+//		int orderlist_right = right - (rtl ? max(ScaleGUITrad(100) + text_offset, width / 2) : 0);
+//
+//		int image_left  = (rtl && show_orderlist) ? orderlist_right : text_left;
+//		int image_right = (!rtl && show_orderlist) ? orderlist_left : text_right;
+//
+//		int vehicle_button_x = rtl ? right - GetSpriteSize(SPR_PROFIT_LOT).width : left;
+
+		int y = r.top;
+		uint max = std::min<int>(this->vscroll->GetPosition() + this->vscroll->GetCapacity(), this->data.Length());
+		for (uint i = this->vscroll->GetPosition(); i < max; ++i) {
+			const OrderList *ol = this->data[i];
+			StringID str;
+			int text_offset = std::max<int>(GetSpriteSize(SPR_PROFIT_LOT).width, GetDigitWidth() * 3) + WD_FRAMERECT_RIGHT;
+			int text_left  = left  + (rtl ?           0 : text_offset);
+			int text_right = right - (rtl ? text_offset :           0);
+
+			char buf[256];
+			std::snprintf(buf, 256, "Orders list #%d\n", i);
+			DrawString(text_left, text_right, y + line_height - FONT_HEIGHT_SMALL - WD_FRAMERECT_BOTTOM - 1, buf);
+
+			y += line_height;
+		}
 	}
 };
 
