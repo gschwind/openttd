@@ -195,6 +195,20 @@ struct OrdersListWindow : public Window {
 		this->vscroll->SetCapacityFromWidget(this, WID_OL_LIST);
 	}
 
+	virtual void OnClick(Point pt, int widget, int click_count)
+	{
+		switch (widget) {
+			case WID_OL_LIST: { // Matrix to show vehicles
+				uint id_v = this->vscroll->GetScrolledRowFromWidget(pt.y, this, WID_OL_LIST);
+				if (id_v >= this->data.Length()) return; // click out of list bound
+
+				const OrderList *ol = this->data[id_v];
+				ShowOrdersWindow(ol->GetFirstSharedVehicle());
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Draw all the vehicle list items.
 	 * @param selected_vehicle The vehicle that is to be highlighted.
